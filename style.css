@@ -99,7 +99,7 @@ header {
   width: 100%;
   height: 50px;
   font-size: 13px;
-  padding: 5px 20px;
+  padding: 5px 24px;
   background-color: var(--primary-color);
   color: white;
   margin: 0;
@@ -121,7 +121,7 @@ header {
   font-weight: 700; 
   display: inline-block;
   position: absolute; 
-  left: 7px;
+  left: 6px;
   font-size: 0.9em;
 }
 
