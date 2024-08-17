@@ -14,8 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => response.json())
     .then(data => {
-        // Loop through the records and create the gallery
-        data.records.forEach(record => {
+        // Sort records by the "Sort" field
+        const sortedRecords = data.records.sort((a, b) => {
+            return (a.fields.Sort || 0) - (b.fields.Sort || 0);
+        });
+
+        // Loop through the sorted records and create the gallery
+        sortedRecords.forEach(record => {
             const title = record.fields.Title;
             const imageUrl = record.fields.Display[0].url; // Adjust field name to match your actual data
             const linkUrl = record.fields['Link to Access'];
