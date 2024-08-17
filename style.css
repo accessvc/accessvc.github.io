@@ -99,7 +99,7 @@ header {
   width: 100%;
   height: 50px;
   font-size: 13px;
-  padding: 5px 10px;
+  padding: 5px 20px;
   background-color: var(--primary-color);
   color: white;
   margin: 0;
@@ -113,6 +113,16 @@ header {
   white-space: normal;
   border-radius: var(--box-border-radius);
   line-height: 1.2;
+}
+
+.gallery-item h3::before {
+  content: "\f0c6";
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 700; 
+  display: inline-block;
+  position: absolute; 
+  left: 7px;
+  font-size: 0.9em;
 }
 
 footer {
