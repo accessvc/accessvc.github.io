@@ -1,46 +1,37 @@
 document.addEventListener("DOMContentLoaded", function () {
     const galleryContainer = document.getElementById("gallery");
 
-    // Use the Airtable shared view URL (replace with your actual shared view URL)
-    const airtableViewUrl = 'https://airtable.com/appx7QfA2O5a9bGX3/shrWlRpLOJktCEPto';
+    const baseId = 'appx7QfA2O5a9bGX3';
+    const tableId = 'tblkBviCbTghJmFsE';
+    const apiKey = 'patjEEgdBQK3h4g6J.b3c8267f140e12bd10f9d630787f1693e73c93cca45d96956887007d1e6c87fe';
 
-    // Fetch the shared view page
-    fetch(airtableViewUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();  // We expect HTML text
-        })
-        .then(html => {
-            // Create a temporary DOM element to parse the HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
+    fetch(`https://api.airtable.com/v0/${baseId}/${tableId}`, {
+        headers: {
+            'Authorization': `Bearer ${apiKey}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        data.records.forEach(record => {
+            const title = record.fields.Title;  
+            const imageUrl = record.fields.Image[0].url; 
+            const linkUrl = record.fields.Link;
 
-            // Extract data (titles, images, links) from the shared view HTML
-            const rows = doc.querySelectorAll('.some-row-selector');  // Adjust selector based on the actual structure
-            rows.forEach(row => {
-                const title = row.querySelector('.title-selector').innerText;
-                const imageUrl = row.querySelector('.image-selector').src;
-                const linkUrl = row.querySelector('.link-selector').href;
+            const galleryItem = document.createElement('div');
+            galleryItem.classList.add('gallery-item');
 
-                // Create gallery item
-                const galleryItem = document.createElement('div');
-                galleryItem.classList.add('gallery-item');
+            galleryItem.innerHTML = `
+                <a href="${linkUrl}" target="_blank">
+                    <img src="${imageUrl}" alt="${title}">
+                    <h3>${title}</h3>
+                </a>
+            `;
 
-                galleryItem.innerHTML = `
-                    <a href="${linkUrl}" target="_blank">
-                        <img src="${imageUrl}" alt="${title}">
-                        <h3>${title}</h3>
-                    </a>
-                `;
-
-                // Append the gallery item to the gallery container
-                galleryContainer.appendChild(galleryItem);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            galleryContainer.innerHTML = `<p>Failed to load gallery. Please try again later.</p>`;
+            galleryContainer.appendChild(galleryItem);
         });
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        galleryContainer.innerHTML = `<p>Failed to load gallery. Please try again later.</p>`;
+    });
 });
