@@ -1,23 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
     const galleryContainer = document.getElementById("gallery");
 
-    // Use the shared Airtable view URL (replace with your actual shared view URL)
-    const airtableViewUrl = 'https://api.airtable.com/v0/YOUR_SHARED_VIEW_LINK?format=json';
+    // Use the Airtable shared view URL (replace with your actual shared view URL)
+    const airtableViewUrl = 'https://airtable.com/appx7QfA2O5a9bGX3/shrWlRpLOJktCEPto';
 
-    // Fetch the data from the shared view URL
+    // Fetch the shared view page
     fetch(airtableViewUrl)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json();
+            return response.text();  // We expect HTML text
         })
-        .then(data => {
-            // Display data as a gallery
-            data.records.forEach(record => {
-                const title = record.fields.Title;
-                const imageUrl = record.fields.Display[0].url;  // Assuming the Display field is an attachment
-                const linkUrl = record.fields['Link to Access'];
+        .then(html => {
+            // Create a temporary DOM element to parse the HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // Extract data (titles, images, links) from the shared view HTML
+            const rows = doc.querySelectorAll('.some-row-selector');  // Adjust selector based on the actual structure
+            rows.forEach(row => {
+                const title = row.querySelector('.title-selector').innerText;
+                const imageUrl = row.querySelector('.image-selector').src;
+                const linkUrl = row.querySelector('.link-selector').href;
 
                 // Create gallery item
                 const galleryItem = document.createElement('div');
